@@ -2,6 +2,7 @@ package com.comicfiguresshop.restapi.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.comicfiguresshop.restapi.model.Product;
 import com.comicfiguresshop.restapi.repository.ProductRepository;
@@ -31,6 +32,49 @@ public class ProductController {
             return new ResponseEntity<>(products, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/products/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable("id") long id) {
+        Optional<Product> productData = productRepository.findById(id);
+
+        if (productData.isPresent()) {
+            return new ResponseEntity<>(productData.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<HttpStatus> deleteProduct(@PathVariable("id") long id) {
+        try {
+            productRepository.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/products/{id}")
+    public ResponseEntity<Product> updateTutorial(@PathVariable("id") long id, @RequestBody Product tutorial) {
+        Optional<Product> productData = productRepository.findById(id);
+
+        if (productData.isPresent()) {
+            Product _product = productData.get();
+            _product.setTitle(tutorial.getTitle());
+            _product.setDescription(tutorial.getDescription());
+            _product.setRibbon(tutorial.getRibbon());
+            _product.setPrice(tutorial.getPrice());
+            _product.setDiscount(tutorial.getDiscount());
+            _product.setSalePrice(tutorial.getSalePrice());
+            _product.setStock(tutorial.getStock());
+            _product.setSku(tutorial.getSku());
+            _product.setBrand(tutorial.getBrand());
+            _product.setCategories(tutorial.getCategories());
+            return new ResponseEntity<>(productRepository.save(_product), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
