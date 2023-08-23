@@ -9,6 +9,7 @@ import com.comicfiguresshop.restapi.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +20,7 @@ public class ProductController {
     ProductRepository productRepository;
 
     @GetMapping("/products")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Product>> getAllProducts() {
         try {
             List<Product> products = new ArrayList<Product>();
@@ -36,6 +38,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Product> getProductById(@PathVariable("id") long id) {
         Optional<Product> productData = productRepository.findById(id);
 
@@ -47,6 +50,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/products/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<HttpStatus> deleteProduct(@PathVariable("id") long id) {
         try {
             productRepository.deleteById(id);
@@ -57,6 +61,7 @@ public class ProductController {
     }
 
     @PutMapping("/products/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Product> updateTutorial(@PathVariable("id") long id, @RequestBody Product tutorial) {
         Optional<Product> productData = productRepository.findById(id);
 
@@ -79,6 +84,7 @@ public class ProductController {
     }
 
     @PostMapping("/products")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         try {
             Product _product = productRepository
