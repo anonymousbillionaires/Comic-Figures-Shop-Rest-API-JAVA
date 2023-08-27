@@ -1,6 +1,7 @@
 package com.comicfiguresshop.restapi.config;
 
 import com.comicfiguresshop.restapi.filters.JwtAuthenticationFilter;
+import com.comicfiguresshop.restapi.handler._LogoutHandler;
 import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -45,7 +46,7 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .logout(logout -> logout.logoutUrl("/api/logout").addLogoutHandler(logoutHandler).logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext()));
+                .logout(logout -> logout.logoutUrl("/api/auth/logout").addLogoutHandler(new _LogoutHandler()).logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext()));
         return http.build();
     }
 }
